@@ -1,0 +1,87 @@
+<script>
+
+var app = new Vue({
+  el: '#cart',
+  data: {
+    products: [],
+    sums: {
+      'qty': 0, 
+      'products': 0, 
+      'discount': 0, 
+      'expense_sum': 0.00,
+      'percent_discont': 0, 
+      'order_sum': 0
+    }
+  },
+  created: function () {
+    this.loadCart();
+    this.updateSums();
+    var that = this;
+    setInterval(function(){
+      that.loadCart();
+      that.updateSums();
+    }, 8000); 
+  },
+  filters: {
+    moneyFormat: function(value) {
+      value = parseFloat(value).toFixed(2)
+      return value;
+    }
+  },
+  methods: {
+    loadCart: function() {
+      var cart = localStorage.getItem('cart');
+      if (cart == null) {cart = '[]'};
+
+      this.products = JSON.parse(cart);
+    },
+
+    updateSums: function() {
+      let sums = {
+        'qty': 0, 
+        'products': 0, 
+        'discount': 0, 
+        'expense_sum': 0.00,
+        'percent_discont': 0, 
+        'order_sum': 0
+      };
+      
+      sums.expense_sum = parseFloat(this.sums.expense_sum);
+
+      _.each(this.products, function(item, index, products) {
+        var subSum = parseFloat(item.price * item.qty);
+
+        products[index]['subSum'] = subSum;
+        products[index]['discount'] = item.discount;
+        sums.percent_discont += parseFloat(item.discount);
+        sums.qty += parseInt(item.qty);
+        sums.products += subSum;
+        sums.discount += (subSum * (parseFloat(item.discount) / 100));
+        sums.order_sum += subSum;
+      });
+
+      sums.order_sum = (sums.order_sum + sums.expense_sum) - sums.discount;  
+
+      this.sums = sums;
+      localStorage.setItem('cart', JSON.stringify(this.products));
+    },
+
+    update: function() {
+      this.updateSums();
+    },
+
+    removeProduct: function(index) {
+      this.products.splice(index, 1);
+      this.updateSums();
+    },
+
+    cleanList: function() {
+      this.products = [];
+      localStorage.setItem('cart', JSON.stringify(this.products));
+      this.updateSums();
+    },
+
+  }
+})
+
+</script>

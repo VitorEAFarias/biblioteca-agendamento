@@ -1,0 +1,32 @@
+<script>
+
+var app = new Vue({
+  el: '#geoLocalization',
+  data: {
+    location: {coords: {latitude: null, longitude: null}},
+    gettingLocation: false,
+    errorStr:null
+  },
+  created: function () {
+    if(!("geolocation" in navigator)) {
+      this.errorStr = 'Geolocation is not available.';
+      console.log(this.errorStr);
+      return;
+    }
+
+    this.gettingLocation = true;
+    // get position
+    navigator.geolocation.getCurrentPosition(pos => {
+      this.gettingLocation = false;
+      this.location = pos;
+      
+    }, err => {
+      this.gettingLocation = false;
+      this.errorStr = err.message;
+      console.log(this.errorStr);
+    })
+
+  }
+})
+
+</script>

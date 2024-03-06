@@ -1,0 +1,5 @@
+vendor
+src/settings.php
+src/settings_mysql.php
+src/settings_template_agenda.php
+src/conn.php

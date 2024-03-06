@@ -1,0 +1,242 @@
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/v-mask/dist/v-mask.min.js"></script>
+
+<script>
+  
+Vue.use(VueMask.VueMaskPlugin);
+
+var app = new Vue({
+  el: '#formTwo',
+  data: {
+    operation: 0,
+    validForm: false,
+    sendButton: false,
+    alerts: {selectAsbl: false},
+    searchAsbl: '',
+    answer: {
+      id: null,
+      state_type: null,
+      asbl: null,
+      status_residents: null
+    },
+    censo: {
+      newLetter: 'A'
+    },
+    location: {coords: {latitude: null, longitude: null}},
+    gettingLocation: false,
+    stepForm: 0,
+    host: window.location.protocol + '//' + window.location.host,
+    address: '',
+    residentMask: [],
+    alertMask: [],
+    residents: [{}],
+    asbl: []
+  },
+  
+  created: function () {
+    this.checkIfEdit();
+    this.getGPSLocation();
+  },
+
+  updated: function () {
+    locastyle.datepicker.init();
+  },
+  
+  methods:  {
+
+    getGPSLocation: function() {
+      
+      if(!("geolocation" in navigator)) {
+        this.errorStr = 'Geolocation is not available.';
+        console.log(this.errorStr);
+        return;
+      }
+
+      this.gettingLocation = false;
+      // get position
+      navigator.geolocation.getCurrentPosition(pos => {
+        this.gettingLocation = true;
+        this.location = pos;
+      
+      }, err => {
+        this.gettingLocation = false;
+        console.log(err);
+      })
+    },
+
+    checkIfEdit: function() {
+      let url = window.location.pathname.split('/');
+      if (url[3] !== undefined) {
+        this.answer.id = url[3];
+        this.operation = 1;
+        this.stepForm = 2;
+        this.validForm = false;
+        this.sendButton = true;
+
+        this.loadAnswer();
+        this.loadResident();
+
+      }
+    },
+
+    loadAnswer: function () {
+      axios.post(
+        this.host+'/v1/answer', {
+          'auth': 'IB@valodia@2020', 'id': this.answer.id
+        })
+      .then(response => (        
+        this.answer = response.data,
+        this.checkStatusResident()
+      )) 
+    },
+
+    loadResident: function () {
+      axios.post(
+        this.host+'/v1/answer-residents', {
+          'auth': 'IB@valodia@2020', 'answer_id': this.answer.id
+        })
+      .then(response => (
+        this.residents = response.data
+      )) 
+    },
+
+    selectAsbl: function (asbl, was_visited, letter, street_1) {      
+      if (was_visited == 1) {
+        let newLetter = letter.charCodeAt(0);
+        newLetter++;
+
+        this.answer.asbl = asbl + ' ' + String.fromCharCode(newLetter);
+        this.alerts.selectAsbl = true;
+        this.censo.letter = String.fromCharCode(newLetter);
+      }else{
+        this.answer.asbl = asbl + ' A';
+        this.alerts.selectAsbl = false;
+        this.censo.letter = 'A';
+      }
+
+      this.answer.address = street_1;
+    },
+
+    addNewResident: function () {
+      this.residents.push({});
+    },
+
+    deleteLastResident: function () {
+      this.residents.pop();
+    },
+    
+    getCensoCodes: function () {
+      
+      if (this.searchAsbl.length > 6) {
+        axios.post(
+          this.host+'/v1/censo/asbl', {
+            'asbl': this.searchAsbl
+          })
+        .then(response => (
+          this.stepForm = 1,
+          this.asbl = response.data
+        ))        
+      }
+
+    },
+
+    checkStateType: function () {
+      if (this.answer.state_type == 0) {
+        this.sendButton  = true;
+        this.validForm = false;
+        this.stepForm = 1;
+      } 
+
+      if (this.answer.state_type == 1) {
+        this.sendButton  = false;
+        this.validForm = false;
+        this.stepForm = 2;
+      }
+    },
+
+    checkStatusResident: function () {
+
+      if (this.answer.status_residents == 0) {
+        this.sendButton  = true;
+        this.validForm = true;
+        this.stepForm = 2;
+      }else{
+        this.stepForm = 2;
+        this.validForm = false;
+        this.sendButton  = true;
+      }
+
+    },
+
+    checkResidentType: function (index, document_type) {
+      switch (document_type) {
+        case 'CPF':
+          this.residentMask[index] = '###.###.###-###';
+          break;
+
+        case 'RG':
+            this.residentMask[index] = '##.###.###-###';
+          break;
+
+        case 'CN':
+          this.residentMask[index] = '########## #### # #### ### ####### ##';
+          break;
+
+        case 'NI':
+          this.residentMask[index] = '';
+          break;
+      }
+    },
+
+    isValidCPF: function(cpf) {
+
+      // cpf = cpf.split('.').join('');
+      // cpf = cpf.split('-').join('');
+     
+      cpf = cpf.replace(/[\s.-]*/igm, '')
+      if (
+        !cpf ||
+        cpf.length != 11 ||
+        cpf == "00000000000" ||
+        cpf == "11111111111" ||
+        cpf == "22222222222" ||
+        cpf == "33333333333" ||
+        cpf == "44444444444" ||
+        cpf == "55555555555" ||
+        cpf == "66666666666" ||
+        cpf == "77777777777" ||
+        cpf == "88888888888" ||
+        cpf == "99999999999" 
+      ) {
+        return true
+      }
+      var soma = 0
+      var resto
+      for (var i = 1; i <= 9; i++) 
+        soma = soma + parseInt(cpf.substring(i-1, i)) * (11 - i)
+        resto = (soma * 10) % 11
+        if ((resto == 10) || (resto == 11))  resto = 0
+          if (resto != parseInt(cpf.substring(9, 10)) ) return true
+            soma = 0
+          for (var i = 1; i <= 10; i++) 
+            soma = soma + parseInt(cpf.substring(i-1, i)) * (12 - i)
+            resto = (soma * 10) % 11
+            if ((resto == 10) || (resto == 11))  resto = 0
+              if (resto != parseInt(cpf.substring(10, 11) ) ) return true
+        return false
+    },
+
+    validateResidentCode: function (index) {
+      if (this.residents[index].document == 'CPF') {
+        if (this.residents[index].code.length >= 14 ) {
+          this.alertMask[index] = this.isValidCPF(this.residents[index].code);
+          console.log(this.alertMask[index]);
+        }
+      }
+      
+    }
+
+  }
+})
+
+</script>

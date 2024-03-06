@@ -1,0 +1,20 @@
+<script>
+
+var app = new Vue({
+  el: '#product',
+  data: {
+    product: {},
+  },
+  created: function () {
+  },
+  filters: {
+    moneyFormat: function(value) {
+      value = parseFloat(value).toFixed(2)
+      return value;
+    }
+  },
+  methods: {
+  }
+})
+
+</script>

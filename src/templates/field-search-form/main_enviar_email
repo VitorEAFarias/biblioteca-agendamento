@@ -1,0 +1,33 @@
+					 <h2>Enviar email</h2>
+					 <br />
+						<form action="/field-search-form/send-mail" method="POST" class="ls-form ls-form-horizontal row"  data-ls-module="form">
+						  <fieldset>
+						  <div class="">
+
+						  <label class="ls-label col-md-12">
+							  <b class="ls-label-text">Assunto</b>
+							  <input type="text" name="sendMail[assunto]" placeholder="Assunto"  class="ls-field ls-form-disable" required >
+							</label>
+							
+							<label class="ls-label col-md-6">
+							  <b class="ls-label-text">Solicitante</b>
+							  <p class="ls-label-info">responsavel pelo agendamento</p>
+							  <input type="text" name="sendMail[destino_nome]" placeholder="Nome e sobrenome"  class="ls-field ls-form-disable" value="<?php echo $item['solicitante'] ?>" required >
+							</label>
+							<label class="ls-label col-md-6">
+							  <b class="ls-label-text">E-mail</b>
+							  <p class="ls-label-info">email de contato do solicitante</p>
+							  <input type="text" name="sendMail[destino_email]" placeholder="Escreva seu email" value="<?php echo $item['email'] ?>" required >
+							</label>
+							<div>
+							<label class="ls-label col-md-8">
+							  <b class="ls-label-text">Informações</b>
+								  <label class="ls-label">
+									<textarea name="sendMail[descricao]" rows="4"></textarea>
+								  </label>
+							</label>
+							<button type="submit" class="ls-btn-primary">Enviar email</button>	
+						  </fieldset>
+						  </form>
+						  
+						  <hr />

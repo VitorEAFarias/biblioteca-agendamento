@@ -1,0 +1,37 @@
+<script>
+
+var app = new Vue({
+  el: '#cart',
+  data: {
+    message: ''
+  },
+  methods: {
+    addCart: function (id, name, measures, volts, watts, price, class_id) {
+    	
+    	let product = {
+    		'id': id, 'name': name, 'measures': measures, 'volts': volts, 'watts': watts, 'qty': 1, 'price': price, 'discount': 0, 'class_id': class_id
+    	};
+
+    	let cart = localStorage.getItem('cart');
+
+    	if (cart == null) {cart = '[]'};
+
+    	cart = JSON.parse(cart);
+    	cart.push(product);
+
+    	localStorage.setItem('cart', JSON.stringify(cart));
+
+
+    	$('#alerts-template').append(
+    		'<div class="ls-alert-info"><strong>Adicionado:</strong> Produto '+id+' enviado para o pedido atual.</div>'
+    	);
+
+    	setTimeout(function(){ 
+    		$('#alerts-template').html('');
+    	}, 3000);
+
+    }
+  }
+})
+
+</script>
