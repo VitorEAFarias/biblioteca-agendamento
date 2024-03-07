@@ -535,8 +535,8 @@ $app->group('/field-search-form', function () {
 			$this->mysql->insert('eventos', $agendamentos);
 
 			$this->mailer->setFrom('alerta.butantan@butantan.gov.br', 'Agendamentos Biblioteca');
-			//$this->mailer->addAddress('biblioteca.atendimento@butantan.gov.br');
-			$this->mailer->addAddress('vitor.farias@fundacaobutantan.org.br');
+			$this->mailer->addAddress('biblioteca.atendimento@butantan.gov.br');
+			//$this->mailer->addAddress('vitor.farias@fundacaobutantan.org.br');
 			$this->mailer->CharSet = 'UTF-8';
 			$this->mailer->Encoding = 'base64';
 			$this->mailer->Subject = 'Solicitação de Agendamento';

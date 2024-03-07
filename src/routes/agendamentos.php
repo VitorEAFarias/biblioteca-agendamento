@@ -163,7 +163,7 @@ $app->group('/agendamentos', function () {
 		}
 
 		$this->mailer->setFrom('alerta.butantan@butantan.gov.br', 'Cancelamento - Agendamentos Biblioteca');
-		$this->mailer->addAddress('vitor.farias@fundacaobutantan.org.br');
+		$this->mailer->addAddress('biblioteca.atendimento@butantan.gov.br');
 
 		$this->mailer->Subject = 'Socilitação de cancelamento';
 
