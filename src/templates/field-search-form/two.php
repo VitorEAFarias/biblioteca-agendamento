@@ -130,6 +130,7 @@
 								<span><b></b></span>
 							</div>
 						</div>
+
 						<div class="col-xl-2">
 							<label class="ls-label">
 								<p><b class="ls-label-text">Horário Inicial</b></p>
@@ -138,13 +139,19 @@
 								<?php
 								$horaMin = strtotime('08:00');
 								$horaMax = strtotime('17:30');
+								$horaInicial = isset($post['agendamentos']['horaInicial']) && !empty($post['agendamentos']['horaInicial']) ? $post['agendamentos']['horaInicial'] : '08:00';
+
 								for ($hora = $horaMin; $hora <= $horaMax; $hora += 900) {
-									echo '<option value="' . date('H:i', $hora) . '">' . date('H:i', $hora) . '</option>';
+									$horaAtual = date('H:i', $hora);
+									$selected = $horaAtual == $horaInicial ? 'selected' : '';
+									echo '<option value="' . $horaAtual . '" ' . $selected . '>' . $horaAtual . '</option>';
 								}
 								?>
 							</select>
 							<span id="hora-inicio-error" style="color: red;"></span>
 						</div>
+
+
 						<div class="col-xl-1 text-center mt-5">
 							<span><b>Até</b></span>
 						</div>
@@ -156,8 +163,11 @@
 								<?php
 								$horaMin = strtotime('08:00');
 								$horaMax = strtotime('17:30');
-								for ($hora = $horaMin; $hora <= $horaMax; $hora += 900) { // 900 segundos = 15 minutos
-									echo '<option value="' . date('H:i', $hora) . '">' . date('H:i', $hora) . '</option>';
+								$horaFinal = isset($post['agendamentos']['horaFinal']) && !empty($post['agendamentos']['horaFinal']) ? $post['agendamentos']['horaFinal'] : '08:00';
+								for ($hora = $horaMin; $hora <= $horaMax; $hora += 900) {
+									$horaAtual = date('H:i', $hora);
+									$selected = $horaAtual == $horaFinal ? 'selected' : '';
+									echo '<option value="' . $horaAtual . '" ' . $selected . '>' . $horaAtual . '</option>';
 								}
 								?>
 							</select>
@@ -212,8 +222,11 @@
 								<?php
 								$horaMin = strtotime('08:00');
 								$horaMax = strtotime('17:30');
-								for ($hora = $horaMin; $hora <= $horaMax; $hora += 900) { // 900 segundos = 15 minutos
-									echo '<option value="' . date('H:i', $hora) . '">' . date('H:i', $hora) . '</option>';
+								$horaInicioCafe = isset($post['agendamentos']['horaInicialCafe']) && !empty($post['agendamentos']['horaInicialCafe']) ? $post['agendamentos']['horaInicialCafe'] : '08:00';
+								for ($hora = $horaMin; $hora <= $horaMax; $hora += 900) {
+									$horaAtual = date('H:i', $hora);
+									$selected = $horaAtual == $horaInicioCafe ? 'selected' : '';
+									echo '<option value="' . $horaAtual . '" ' . $selected . '>' . $horaAtual . '</option>';
 								}
 								?>
 							</select>
@@ -229,8 +242,11 @@
 								<?php
 								$horaMin = strtotime('08:00');
 								$horaMax = strtotime('17:30');
-								for ($hora = $horaMin; $hora <= $horaMax; $hora += 900) { // 900 segundos = 15 minutos
-									echo '<option value="' . date('H:i', $hora) . '">' . date('H:i', $hora) . '</option>';
+								$horaFinalCafe = isset($post['agendamentos']['horaFinalCafe']) && !empty($post['agendamentos']['horaFinalCafe']) ? $post['agendamentos']['horaFinalCafe'] : '08:00';
+								for ($hora = $horaMin; $hora <= $horaMax; $hora += 900) {
+									$horaAtual = date('H:i', $hora);
+									$selected = $horaAtual == $horaFinalCafe ? 'selected' : '';
+									echo '<option value="' . $horaAtual . '" ' . $selected . '>' . $horaAtual . '</option>';
 								}
 								?>
 							</select>

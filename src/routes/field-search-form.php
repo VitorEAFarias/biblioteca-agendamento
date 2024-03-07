@@ -341,11 +341,16 @@ $app->group('/field-search-form', function () {
 
 		if (empty($post['form']['data']) && empty($post['form']['data_final'])) {
 			$results = $this->mysql->fetchAll(
-				'SELECT *
-				FROM eventos
-				WHERE solicitante LIKE :solicitante
-				AND nomeEvento LIKE :nomeEvento
-				ORDER BY evento_id DESC',
+				'SELECT eventos.*, 
+									CASE
+											WHEN TRY_CAST(eventos.categoria AS int) IS NOT NULL THEN 
+													(SELECT nome FROM categorias WHERE id = CAST(eventos.categoria AS int))
+											ELSE eventos.categoria
+									END AS categoria_nome
+					FROM eventos
+					WHERE eventos.solicitante LIKE :solicitante
+					AND eventos.nomeEvento LIKE :nomeEvento
+					ORDER BY eventos.evento_id DESC',
 				[
 					':solicitante' => '%' . $post['form']['solicitante'] . '%',
 					':nomeEvento' => '%' . $post['form']['nomeEvento'] . '%'
@@ -353,12 +358,17 @@ $app->group('/field-search-form', function () {
 			);
 		} else {
 			$results = $this->mysql->fetchAll(
-				'SELECT  *
-				FROM eventos
-				WHERE solicitante LIKE :solicitante
-				AND nomeEvento LIKE :nomeEvento
-				AND dataInicial BETWEEN :dataInicial AND :dataFinal
-				ORDER BY evento_id DESC',
+				'SELECT eventos.*, 
+									CASE
+											WHEN TRY_CAST(eventos.categoria AS int) IS NOT NULL THEN 
+													(SELECT nome FROM categorias WHERE id = CAST(eventos.categoria AS int))
+											ELSE eventos.categoria
+									END AS categoria_nome
+					FROM eventos
+					WHERE eventos.solicitante LIKE :solicitante
+					AND eventos.nomeEvento LIKE :nomeEvento
+					AND eventos.dataInicial BETWEEN :dataInicial AND :dataFinal
+					ORDER BY eventos.evento_id DESC',
 				[
 					':solicitante' => '%' . $post['form']['solicitante'] . '%',
 					':nomeEvento' => '%' . $post['form']['nomeEvento'] . '%',

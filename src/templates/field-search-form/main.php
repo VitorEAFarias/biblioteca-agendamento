@@ -224,8 +224,8 @@ if ($user['user_adm'] == 0) {
 						</td>
 						<td>
 							<?php
-							if (isset($item['categoria'])) { ?>
-								<?php echo $item['categoria'] ?>
+							if (isset($item['categoria_nome'])) { ?>
+								<?php echo $item['categoria_nome'] ?>
 							<?php	} else { ?>
 								Não Definido
 							<?php	}
