@@ -490,9 +490,13 @@
 			flatpickrInstance.destroy();
 		}
 
+		var currentDate = new Date();
+		var threeMonthsLater = new Date(currentDate.getFullYear(), currentDate.getMonth() + 3, 0);
+
 		field._flatpickr = flatpickr(field, {
 			dateFormat: 'd/m/Y',
 			minDate: getNextMonday(),
+			maxDate: threeMonthsLater,
 			disable: [
 				function(date) {
 					return date.getDay() === 0 || date.getDay() === 6;
@@ -511,7 +515,6 @@
 			},
 		});
 
-		// Adiciona evento de clique ao ícone do calendário
 		var calendarIcon = document.getElementById('calendar-icon');
 		if (calendarIcon) {
 			calendarIcon.addEventListener('click', function() {
@@ -522,7 +525,7 @@
 		function getNextMonday() {
 			var currentDate = new Date();
 			var nextDay = new Date(currentDate);
-			nextDay.setDate(currentDate.getDate() + 1); // Avança para o próximo dia
+			nextDay.setDate(currentDate.getDate() + 1);
 
 			return nextDay;
 		}
