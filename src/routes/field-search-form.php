@@ -459,7 +459,7 @@ $app->group('/field-search-form', function () {
 			'SELECT * FROM categorias WHERE status = 1'
 		);
 
-		$post['locais']           = $post['locais'];
+		$post['locais'] = $post['locais'];
 		$post['form']['selects']['horario']            = $this->session->get('horario');
 		$post['form']['selects']['agendamento_status'] = $this->session->get('agendamento_status');
 		$post['form']['selects']['lugares']            = $this->session->get('lugares');

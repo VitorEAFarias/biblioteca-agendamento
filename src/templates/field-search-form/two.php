@@ -99,18 +99,28 @@
 						</label>
 					</div>
 					<div class="col-xl-4">
-						<p><b class="ls-label-text">Categoria do Evento</b></p>
-						<div class="ls-custom-select">
-							<select class="ls-select" name="agendamentos[categoria]">
-								<option selected="selected" value="0">Selecione...</option>
-								<?php foreach ($categorias as $categoria) : ?>
-									<option value="<?php echo $categoria['id']; ?>" <?php echo ($post['agendamentos']['evento_id'] == $categoria['id']) ? 'selected' : ''; ?>>
-										<?php echo $categoria['nome']; ?>
-									</option>
-								<?php endforeach; ?>
-							</select>
-						</div>
+						<label class="ls-label">
+							<p><b class="ls-label-text">Categoria do Evento</b></p>
+							<div class="ls-custom-select">
+								<select class="ls-custom" name="agendamentos[categoria]">
+									<option value="">Não Definido</option>
+									<?php foreach ($post['categorias'] as $item) : ?>
+										<?php
+										if (is_numeric($post['agendamentos']['categoria']) && $post['agendamentos']['categoria'] == $item['id']) {
+											$selected = 'selected';
+										} else {
+											$selected = ($post['agendamentos']['categoria'] == $item['nome'] ? 'selected' : '');
+										}
+										?>
+										<option <?php echo $selected ?> value="<?php echo $item['nome'] ?>">
+											<?php echo $item['nome'] ?>
+										</option>
+									<?php endforeach ?>
+								</select>
+							</div>
+						</label>
 					</div>
+
 				</div>
 				<div id="dates-container">
 					<div class="row mt-2" id="date-row">
@@ -298,12 +308,18 @@
 						</div>
 						<div class="col-xl-4">
 							<label class="ls-label">
-								<p><b class="ls-label-text">Categoria</b></p>
+								<p><b class="ls-label-text">Categoria do Evento</b></p>
 								<div class="ls-custom-select">
 									<select class="ls-custom" name="agendamentos[categoria]">
 										<option value="">Não Definido</option>
 										<?php foreach ($post['categorias'] as $item) : ?>
-											<?php $selected = ($post['agendamentos']['categoria'] == $item['nome'] ? 'selected' : '') ?>
+											<?php
+											if (is_numeric($post['agendamentos']['categoria']) && $post['agendamentos']['categoria'] == $item['id']) {
+												$selected = 'selected';
+											} else {
+												$selected = ($post['agendamentos']['categoria'] == $item['nome'] ? 'selected' : '');
+											}
+											?>
 											<option <?php echo $selected ?> value="<?php echo $item['nome'] ?>">
 												<?php echo $item['nome'] ?>
 											</option>
