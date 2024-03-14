@@ -63,6 +63,12 @@ $container['mysql'] = function ($c) {
     return $mysql;
 };
 
+$container['mysqlRH'] = function ($c) {
+    $settings = $c->get('settings')['mysqlRH'];
+    $mysqlRH = \Doctrine\DBAL\DriverManager::getConnection($settings, new \Doctrine\DBAL\Configuration());
+    return $mysqlRH;
+};
+
 //PHP Mailer
 
 

@@ -212,22 +212,11 @@ $app->group('/agendamentos', function () {
 		$DateEnd = date("Ymd", strtotime($sendMail['dataFinal']));
 		$TimeEnd = str_replace(":", "", $sendMail['horaFinal']) . '00';
 		$end = $DateEnd . 'T' . $TimeEnd . 'Z';
-		//$end = date_format(date_create($sendMail['dataFinal']), 'Ymd') . 'T' . str_replace(":", "",  $sendMail['horaFinal'] . '00Z');
-
-
-		// var_dump($datestamp);
-		// var_dump($sendMail['dataInicial']);
-		// var_dump($sendMail['dataFinal']);
-		// exit;
-
 
 		$this->mailer->setFrom('alerta.butantan@butantan.gov.br', 'Agendamentos Biblioteca');
 		$this->mailer->addAddress($sendMail['email'], $sendMail['solictante']);
 		$this->mailer->Subject = $sendMail['nomeEvento'];
 
-		//$this->mailer->Body = $this->mail_template->getTemplateByName('ical.php', 
-		//['sendMail' => $sendMail] 	
-		//);
 		$this->mailer->Body = $sendMail['nomeEvento'];
 		$this->mailer->IsHTML(FALSE);
 

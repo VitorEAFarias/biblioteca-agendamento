@@ -426,6 +426,10 @@ $app->group('/field-search-form', function () {
 
 		$categorias = $this->mysql->fetchAll("SELECT * FROM categorias");
 
+		$colaboradores = $this->mysqlRH->fetchAll(
+			"SELECT id, nome, cpf, matricula, cc, Universal_id, centrocusto FROM `Geral`.vw_integracao_RH_AD WHERE status <> 3 AND status <> 'DEMITIDO' ORDER BY nome ASC"
+		);
+
 		$phpView = $this->renderer;
 		$phpView->addAttribute('title', 'Agendamento de salas e auditórios');
 		$phpView->addAttribute('action', '/field-search-form/send-search');
@@ -435,7 +439,8 @@ $app->group('/field-search-form', function () {
 		$phpView = $this->renderer->render($Response, 'field-search-form/two.php', [
 			"messages" => $this->flash->getMessages(),
 			"categorias" => $categorias,
-			"post"	=> $post
+			"post"	=> $post,
+			"colaboradores" => $colaboradores
 		]);
 
 		return $phpView;
@@ -528,7 +533,6 @@ $app->group('/field-search-form', function () {
 
 			unset($agendamentos['evento_id']);
 			unset($agendamentos['datas']);
-
 
 			$arrData1 = explode('/', $value['date']);
 			$agendamentos['dataInicial'] = "$arrData1[2]-$arrData1[1]-$arrData1[0]";

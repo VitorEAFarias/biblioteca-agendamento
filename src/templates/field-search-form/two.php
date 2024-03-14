@@ -48,7 +48,16 @@
 					<div class="col-xl-4">
 						<label class="ls-label">
 							<p><b class="ls-label-text">Solicitante</b></p>
-							<input type="text" name="agendamentos[solicitante]" placeholder="nome solicitante" value="<?php echo trim($post['agendamentos']['solicitante']) ?>" required>
+							<div class="ls-custom-select">
+								<select class="ls-custom" name="agendamentos[solicitante]" id="solicitante">
+									<option value="" disabled selected hidden>Digite o nome para filtrar</option>
+									<?php foreach ($colaboradores as $colaborador) { ?>
+										<option value="<?= $colaborador['Universal_id'] ?>" data-departamento="<?= $colaborador['centrocusto'] ?>">
+											<?= $colaborador['nome'] ?>
+										</option>
+									<?php } ?>
+								</select>
+							</div>
 						</label>
 					</div>
 					<div class="col-xl-4">
@@ -100,27 +109,10 @@
 					</div>
 					<div class="col-xl-4">
 						<label class="ls-label">
-							<p><b class="ls-label-text">Categoria do Evento</b></p>
-							<div class="ls-custom-select">
-								<select class="ls-custom" name="agendamentos[categoria]">
-									<option value="">Não Definido</option>
-									<?php foreach ($post['categorias'] as $item) : ?>
-										<?php
-										if (is_numeric($post['agendamentos']['categoria']) && $post['agendamentos']['categoria'] == $item['id']) {
-											$selected = 'selected';
-										} else {
-											$selected = ($post['agendamentos']['categoria'] == $item['nome'] ? 'selected' : '');
-										}
-										?>
-										<option <?php echo $selected ?> value="<?php echo $item['nome'] ?>">
-											<?php echo $item['nome'] ?>
-										</option>
-									<?php endforeach ?>
-								</select>
-							</div>
+							<p><b class="ls-label-text">Departamento</b></p>
+							<input type="text" id='departamento' name="agendamentos[departamento]" placeholder="Departamento" value="<?php echo $post['agendamentos']['departamento'] ?>" readonly>
 						</label>
 					</div>
-
 				</div>
 				<div id="dates-container">
 					<div class="row mt-2" id="date-row">
@@ -160,7 +152,6 @@
 							</select>
 							<span id="hora-inicio-error" style="color: red;"></span>
 						</div>
-
 
 						<div class="col-xl-1 text-center mt-5">
 							<span><b>Até</b></span>
@@ -368,6 +359,41 @@
 </main>
 
 <script>
+	const selectSolicitante = document.getElementById('solicitante');
+
+	selectSolicitante.addEventListener('input', function() {
+		const inputText = selectSolicitante.value.toLowerCase();
+		const options = selectSolicitante.querySelectorAll('option');
+
+		options.forEach(option => {
+			if (option.value.toLowerCase().includes(inputText) || option.textContent.toLowerCase().includes(inputText)) {
+				option.style.display = '';
+			} else {
+				option.style.display = 'none';
+			}
+		});
+	});
+
+	const inputDepartamento = document.getElementById('departamento');
+
+	let selectedSolicitanteIndex = 0;
+
+	selectSolicitante.addEventListener('change', function() {
+		const selectedOption = selectSolicitante.options[selectSolicitante.selectedIndex];
+		const departamentoSelecionado = selectedOption.getAttribute('data-departamento');
+
+		inputDepartamento.value = departamentoSelecionado;
+		inputDepartamento.classList.add('ls-custom');
+
+		selectedSolicitanteIndex = selectSolicitante.selectedIndex;
+	});
+
+	selectSolicitante.addEventListener('click', function() {
+		if (selectSolicitante.selectedIndex === 0) {
+			selectSolicitante.selectedIndex = selectedSolicitanteIndex;
+		}
+	});
+
 	document.addEventListener('DOMContentLoaded', function() {
 		var radioSim = document.getElementById('radio-sim');
 		var radioNao = document.getElementById('radio-nao');
