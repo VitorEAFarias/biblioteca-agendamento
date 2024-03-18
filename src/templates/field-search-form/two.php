@@ -549,7 +549,7 @@
 		}
 
 		var currentDate = new Date();
-		var threeMonthsLater = new Date(currentDate.getFullYear(), currentDate.getMonth() + 3, 0);
+		var threeMonthsLater = new Date(currentDate.getFullYear(), currentDate.getMonth() + 3, currentDate.getDate());
 
 		field._flatpickr = flatpickr(field, {
 			dateFormat: 'd/m/Y',
@@ -583,7 +583,7 @@
 		function getNextMonday() {
 			var currentDate = new Date();
 			var nextDay = new Date(currentDate);
-			nextDay.setDate(currentDate.getDate() + 1);
+			nextDay.setDate(currentDate.getDate());
 
 			return nextDay;
 		}
