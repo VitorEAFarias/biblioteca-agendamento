@@ -52,7 +52,7 @@
 								<select class="ls-custom" name="agendamentos[solicitante]" id="solicitante">
 									<option value="" disabled selected hidden>Digite o nome para filtrar</option>
 									<?php foreach ($colaboradores as $colaborador) { ?>
-										<option value="<?= $colaborador['Universal_id'] ?>" data-departamento="<?= $colaborador['centrocusto'] ?>">
+										<option value="<?= $colaborador['nome'] ?>" data-departamento="<?= $colaborador['centrocusto'] ?>">
 											<?= $colaborador['nome'] ?>
 										</option>
 									<?php } ?>
