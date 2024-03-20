@@ -50,7 +50,7 @@
 							<p><b class="ls-label-text">Solicitante</b></p>
 							<div class="ls-custom-select">
 								<select class="ls-custom" name="agendamentos[solicitante]" id="solicitante">
-									<option value="" disabled selected hidden>Digite o nome para filtrar</option>
+									<option value="" disabled selected hidden><?php echo $post['agendamentos']['solicitante'] ? $post['agendamentos']['solicitante'] : 'Digite o nome para filtrar' ?></option>
 									<?php foreach ($colaboradores as $colaborador) { ?>
 										<option value="<?= $colaborador['nome'] ?>" data-departamento="<?= $colaborador['centrocusto'] ?>">
 											<?= $colaborador['nome'] ?>
