@@ -45,7 +45,19 @@
 			<form id="form-agendamento" action="<?php echo $action ?>" method="post" class="ls-form-horizontal row ls-form mt-3">
 				<!-- Solicitante -->
 				<div class="row">
-					<div class="col-xl-4">
+					<div class="col-md-4">
+						<label class="ls-label-text" style="margin-bottom: 12px;" for="solicitante"><b>Solicitante</b></label>
+						<select class="form-control" id="solicitante" name="agendamentos[solicitante]">
+							<option value="">Selecione</option>
+							<?php foreach ($colaboradores as $colaborador) : ?>
+								<option value="<?= $colaborador['nome'] ?>" data-departamento="<?= $colaborador['centrocusto'] ?>">
+									<?= $colaborador['nome'] ?>
+								</option>
+							<?php endforeach; ?>
+						</select>
+					</div>
+
+					<!-- <div class="col-xl-4">
 						<label class="ls-label">
 							<p><b class="ls-label-text">Solicitante</b></p>
 							<div class="ls-custom-select">
@@ -59,7 +71,7 @@
 								</select>
 							</div>
 						</label>
-					</div>
+					</div> -->
 					<div class="col-xl-4">
 						<label class="ls-label">
 							<p><b class="ls-label-text">Email Solicitante</b></p>
@@ -357,42 +369,76 @@
 		</div>
 	</div>
 </main>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
+<!-- Selectize -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.default.min.css" integrity="sha512-pTaEn+6gF1IeWv3W1+7X7eM60TFu/agjgoHmYhAfLEU8Phuf6JKiiE8YmsNC0aCgQv4192s4Vai8YZ6VNM6vyQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js" integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-	const selectSolicitante = document.getElementById('solicitante');
-
-	selectSolicitante.addEventListener('input', function() {
-		const inputText = selectSolicitante.value.toLowerCase();
-		const options = selectSolicitante.querySelectorAll('option');
-
-		options.forEach(option => {
-			if (option.value.toLowerCase().includes(inputText) || option.textContent.toLowerCase().includes(inputText)) {
-				option.style.display = '';
-			} else {
-				option.style.display = 'none';
+	$(document).ready(function() {
+		$("select").selectize({
+			onChange: function(value) {
+				var selectedOption = this.options[value]; // Obtém o elemento option selecionado
+				//var departamentoSelecionado = selectedOption.dataset.departamento; // Obtém o valor do data attribute 'data-departamento'
+				var departamentoSelecionado = selectedOption.departamento;
+				carregarCampos(departamentoSelecionado);
 			}
 		});
 	});
 
-	const inputDepartamento = document.getElementById('departamento');
-
-	let selectedSolicitanteIndex = 0;
-
-	selectSolicitante.addEventListener('change', function() {
-		const selectedOption = selectSolicitante.options[selectSolicitante.selectedIndex];
-		const departamentoSelecionado = selectedOption.getAttribute('data-departamento');
+	function carregarCampos(departamentoSelecionado) {
+		console.log(departamentoSelecionado)
+		// let selectSolicitante = document.getElementById('solicitante');
+		let inputDepartamento = document.getElementById('departamento');
+		// let selectedSolicitanteIndex = 0;
+		// let selectedOption = selectSolicitante.options[selectSolicitante.selectedIndex];
+		// let departamentoSelecionado = selectedOption.getAttribute('data-departamento');
 
 		inputDepartamento.value = departamentoSelecionado;
 		inputDepartamento.classList.add('ls-custom');
 
-		selectedSolicitanteIndex = selectSolicitante.selectedIndex;
-	});
+		// selectedSolicitanteIndex = selectSolicitante.selectedIndex;
 
-	selectSolicitante.addEventListener('click', function() {
-		if (selectSolicitante.selectedIndex === 0) {
-			selectSolicitante.selectedIndex = selectedSolicitanteIndex;
-		}
-	});
+		// if (selectSolicitante.selectedIndex === 0) {
+		// 	selectSolicitante.selectedIndex = selectedSolicitanteIndex;
+		// }
+	}
+
+	//const selectSolicitante = document.getElementById('solicitante');
+
+	// selectSolicitante.addEventListener('input', function() {
+	// 	const inputText = selectSolicitante.value.toLowerCase();
+	// 	const options = selectSolicitante.querySelectorAll('option');
+
+	// 	options.forEach(option => {
+	// 		if (option.value.toLowerCase().includes(inputText) || option.textContent.toLowerCase().includes(inputText)) {
+	// 			option.style.display = '';
+	// 		} else {
+	// 			option.style.display = 'none';
+	// 		}
+	// 	});
+	// });
+
+	// const inputDepartamento = document.getElementById('departamento');
+
+	// let selectedSolicitanteIndex = 0;
+
+	// selectSolicitante.addEventListener('change', function() {
+	// 	const selectedOption = selectSolicitante.options[selectSolicitante.selectedIndex];
+	// 	const departamentoSelecionado = selectedOption.getAttribute('data-departamento');
+
+	// 	inputDepartamento.value = departamentoSelecionado;
+	// 	inputDepartamento.classList.add('ls-custom');
+
+	// 	selectedSolicitanteIndex = selectSolicitante.selectedIndex;
+	// });
+
+	// selectSolicitante.addEventListener('click', function() {
+	// 	if (selectSolicitante.selectedIndex === 0) {
+	// 		selectSolicitante.selectedIndex = selectedSolicitanteIndex;
+	// 	}
+	// });
 
 	document.addEventListener('DOMContentLoaded', function() {
 		var radioSim = document.getElementById('radio-sim');

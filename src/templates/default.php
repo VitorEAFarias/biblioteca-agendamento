@@ -12,10 +12,15 @@ $page = basename(parse_url($url, PHP_URL_PATH));
   <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+
   <!-- Incluí os estilos CSS -->
   <link rel="stylesheet" href="/assets/css/bootstrap.css">
   <link rel="stylesheet" href="/assets/css/styles.css">
+  <!-- Locaweb -->
   <link href="https://cdn.fundacaobutantan.org.br/locaweb/3.10.0/stylesheets/locastyle.css" rel="stylesheet" type="text/css">
+  <script src="https://cdn.fundacaobutantan.org.br/locaweb/3.10.0/javascripts/locastyle.js" type="text/javascript"></script>
+
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous" />
 
   <link rel="icon" sizes="192x192" href="assets/img/ico-boilerplate.png">
@@ -24,6 +29,7 @@ $page = basename(parse_url($url, PHP_URL_PATH));
   <!-- Incluí os scripts JS -->
   <script src="https://cdn.jsdelivr.net/npm/vue"></script>
   <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
+
 </head>
 
 <style>
@@ -44,8 +50,7 @@ $page = basename(parse_url($url, PHP_URL_PATH));
   <?php require(__DIR__ . '/menu/sidebar.php') ?>
   <?= $content ?>
 
-  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-  <script src="https://cdn.fundacaobutantan.org.br/locaweb/3.10.0/javascripts/locastyle.js" type="text/javascript"></script>
+  <!-- <script src="https://cdn.fundacaobutantan.org.br/locaweb/3.10.0/javascripts/locastyle.js" type="text/javascript"></script> -->
 
 </body>
 
