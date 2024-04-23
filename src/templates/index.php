@@ -7,7 +7,7 @@
   <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-  <!-- <link href="https://assets.locaweb.com.br/locastyle/3.10.0/stylesheets/locastyle.css" rel="stylesheet" type="text/css"> -->
+  <link href="https://assets.locaweb.com.br/locastyle/3.10.0/stylesheets/locastyle.css" rel="stylesheet" type="text/css">
 
   <!-- Locaweb - Butantan -->
   <!-- <link href="https://cdn.fundacaobutantan.org.br/locaweb/3.10.0/stylesheets/locastyle.css" rel="stylesheet" type="text/css"> -->
