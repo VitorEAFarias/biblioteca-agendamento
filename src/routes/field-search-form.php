@@ -341,7 +341,7 @@ $app->group('/field-search-form', function () {
 
 		if (empty($post['form']['data']) && empty($post['form']['data_final'])) {
 			$results = $this->mysql->fetchAll(
-				'SELECT eventos.*, 
+				'SELECT TOP 200 eventos.*, 
 									CASE
 											WHEN TRY_CAST(eventos.categoria AS int) IS NOT NULL THEN 
 													(SELECT nome FROM categorias WHERE id = CAST(eventos.categoria AS int))
@@ -358,7 +358,7 @@ $app->group('/field-search-form', function () {
 			);
 		} else {
 			$results = $this->mysql->fetchAll(
-				'SELECT eventos.*, 
+				'SELECT TOP 200 eventos.*, 
 									CASE
 											WHEN TRY_CAST(eventos.categoria AS int) IS NOT NULL THEN 
 													(SELECT nome FROM categorias WHERE id = CAST(eventos.categoria AS int))

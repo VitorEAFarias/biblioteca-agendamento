@@ -49,13 +49,20 @@
 						<label class="ls-label-text" style="margin-bottom: 12px;" for="solicitante"><b>Solicitante</b></label>
 						<select class="form-control" id="solicitante" name="agendamentos[solicitante]">
 							<option value="">Selecione</option>
-							<?php foreach ($colaboradores as $colaborador) : ?>
-								<option value="<?= $colaborador['nome'] ?>" data-departamento="<?= $colaborador['centrocusto'] ?>">
-									<?= $colaborador['nome'] ?>
-								</option>
-							<?php endforeach; ?>
+							<?php if ($operator == 'edit' && isset($post['agendamentos']['solicitante'])) : ?>
+								<option value="<?= $post['agendamentos']['solicitante'] ?>" selected><?= $post['agendamentos']['solicitante'] ?></option>
+							<?php else : ?>
+								<?php foreach ($colaboradores as $colaborador) : ?>
+									<?php $selected = ($operator == 'edit' && $colaborador['nome'] == $post['agendamentos']['solicitante']) ? 'selected' : ''; ?>
+									<option value="<?= $colaborador['nome'] ?>" data-departamento="<?= $colaborador['centrocusto'] ?>" <?= $selected ?>>
+										<?= $colaborador['nome'] ?>
+									</option>
+								<?php endforeach; ?>
+							<?php endif; ?>
 						</select>
 					</div>
+
+
 
 					<!-- <div class="col-xl-4">
 						<label class="ls-label">
@@ -280,55 +287,49 @@
 						<div class="col-xl-4">
 							<label class="ls-label">
 								<p><b class="ls-label-text">Status do Agendamento</b></p>
-								<div class="ls-custom-select">
-									<select class="ls-custom" name="agendamentos[status]" required id="status" onchange="mostrarTextarea()">
-										<?php foreach ($post['form']['selects']['agendamento_status'] as $item) : ?>
-											<?php $selected = ($post['agendamentos']['status'] == $item['value'] ? 'selected' : '') ?>
-											<option <?php echo $selected ?> value="<?php echo $item['value'] ?>">
-												<?php echo $item['name'] ?>
-											</option>
-										<?php endforeach ?>
-									</select>
-								</div>
+								<select class="form-control" name="agendamentos[status]" required id="status" onchange="mostrarTextarea()">
+									<?php foreach ($post['form']['selects']['agendamento_status'] as $item) : ?>
+										<?php $selected = ($post['agendamentos']['status'] == $item['value'] ? 'selected' : '') ?>
+										<option <?php echo $selected ?> value="<?php echo $item['value'] ?>">
+											<?php echo $item['name'] ?>
+										</option>
+									<?php endforeach ?>
+								</select>
 							</label>
 						</div>
 
 						<div class="col-xl-4">
 							<label class="ls-label">
 								<p><b class="ls-label-text">Locais disponíveis</b></p>
-								<div class="ls-custom-select">
-									<select class="ls-custom" name="agendamentos[local_id]">
-										<option disabled selected value="">Selecione</option>
-										<?php foreach ($post['locais'] as $item) : ?>
-											<?php $selected = ($post['agendamentos']['local_id'] == $item['local_id'] ? 'selected' : '') ?>
-											<option style="color:<?php echo $item['color'] ?>" <?php echo $selected ?> value="<?php echo $item['local_id'] ?>">
-												<?php echo $item['nomeLocal'] ?>
-											</option>
-										<?php endforeach ?>
-									</select>
-								</div>
+								<select class="form-control" name="agendamentos[local_id]">
+									<option disabled selected value="">Selecione</option>
+									<?php foreach ($post['locais'] as $item) : ?>
+										<?php $selected = ($post['agendamentos']['local_id'] == $item['local_id'] ? 'selected' : '') ?>
+										<option style="color:<?php echo $item['color'] ?>" <?php echo $selected ?> value="<?php echo $item['local_id'] ?>">
+											<?php echo $item['nomeLocal'] ?>
+										</option>
+									<?php endforeach ?>
+								</select>
 							</label>
 						</div>
 						<div class="col-xl-4">
 							<label class="ls-label">
 								<p><b class="ls-label-text">Categoria do Evento</b></p>
-								<div class="ls-custom-select">
-									<select class="ls-custom" name="agendamentos[categoria]">
-										<option value="">Não Definido</option>
-										<?php foreach ($post['categorias'] as $item) : ?>
-											<?php
-											if (is_numeric($post['agendamentos']['categoria']) && $post['agendamentos']['categoria'] == $item['id']) {
-												$selected = 'selected';
-											} else {
-												$selected = ($post['agendamentos']['categoria'] == $item['nome'] ? 'selected' : '');
-											}
-											?>
-											<option <?php echo $selected ?> value="<?php echo $item['nome'] ?>">
-												<?php echo $item['nome'] ?>
-											</option>
-										<?php endforeach ?>
-									</select>
-								</div>
+								<select class="form-control" name="agendamentos[categoria]">
+									<option value="">Não Definido</option>
+									<?php foreach ($post['categorias'] as $item) : ?>
+										<?php
+										if (is_numeric($post['agendamentos']['categoria']) && $post['agendamentos']['categoria'] == $item['id']) {
+											$selected = 'selected';
+										} else {
+											$selected = ($post['agendamentos']['categoria'] == $item['nome'] ? 'selected' : '');
+										}
+										?>
+										<option <?php echo $selected ?> value="<?php echo $item['nome'] ?>">
+											<?php echo $item['nome'] ?>
+										</option>
+									<?php endforeach ?>
+								</select>
 							</label>
 						</div>
 						<div class="col-xl-12">
