@@ -141,6 +141,7 @@
 
           if ($user['user_adm'] == 1) {
             $title = utf8_decode($value['nomeEvento']);
+            $id = $value['evento_id'];
           }
 
           if ($user['user_adm'] == 0) {
@@ -174,6 +175,7 @@
           $ramal = '<br /><b>Ramal:</b> ' . utf8_decode($value['ramal']);
 
           $description =
+            '<b>ID:</b>' . $id . '\n <br>' .
             '<b>Evento:</b> ' . $title
             . $solicitante . $ramal . '<br>' . $nomeLocal .  $tituloInicio . $descriptionStart .
             '\n' . $tituloTermino .  $descriptionEnd .  $people .  '' . $tituloObservacoes . utf8_decode($value['observacoes']);
@@ -197,6 +199,7 @@
             },";
           } else {
             echo "{
+              id: '{$value['evento_id']}',
               title: '{$value['nomeEvento']}',
               start: '{$value['horaInicial']}',
               end: '{$value['horaFinal']}',
