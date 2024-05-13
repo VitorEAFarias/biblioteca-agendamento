@@ -156,7 +156,7 @@
 							<label class="ls-label">
 								<p><b class="ls-label-text">Horário Inicial</b></p>
 							</label>
-							<select id="hora-inicio" class="form-control" name="agendamentos[horaInicial]" required style="width: 100%">
+							<select id="hora-inicio" class="form-control" name="agendamentos[horaInicial]" style="width: 100%">
 								<?php
 								$horaMin = strtotime('08:00');
 								$horaMax = strtotime('17:30');
@@ -179,7 +179,7 @@
 							<label class="ls-label">
 								<p><b class="ls-label-text">Horário Final</b></p>
 							</label>
-							<select id="hora-fim" class="form-control" name="agendamentos[horaFinal]" required style="width: 100%">
+							<select id="hora-fim" class="form-control" name="agendamentos[horaFinal]" style="width: 100%">
 								<?php
 								$horaMin = strtotime('08:00');
 								$horaMax = strtotime('17:30');
