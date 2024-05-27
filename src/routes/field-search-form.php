@@ -520,52 +520,79 @@ $app->group('/field-search-form', function () {
 		$user = $this->session->get('auth');
 		$post = $Request->getParsedBody();
 
+		$post['agendamentos']['create_date'] = date("Y-m-d H:i:s");
+		$post['agendamentos']['update_date'] = date("Y-m-d H:i:s");
+
+		$post['agendamentos']['horaInicialCafe'] = $post['agendamentos']['horaInicialCafe'] != "" ? $post['agendamentos']['horaInicialCafe'] : '00:00:00';
+		$post['agendamentos']['horaFinalCafe'] = $post['agendamentos']['horaFinalCafe'] != "" ? $post['agendamentos']['horaFinalCafe'] : '00:00:00';
+
+		$agendamentos = $post['agendamentos'];
+
+		unset($agendamentos['evento_id']);
+		unset($agendamentos['datas']);
+
+		$arrData1 = explode('/', $post['agendamentos']['dataInicial']);
+		$agendamentos['dataInicial'] = "$arrData1[2]-$arrData1[1]-$arrData1[0]";
+		$arrData2 = explode('/', $post['agendamentos']['dataInicial']);
+		$agendamentos['dataFinal'] = "$arrData2[2]-$arrData2[1]-$arrData2[0]";
+		$agendamentos['horaInicial'] = date('H:i', strtotime($post['agendamentos']['horaInicial']));
+		$agendamentos['horaFinal'] = date('H:i', strtotime($post['agendamentos']['horaFinal']));
+
+		$agendamentos['create_user'] = $user['id'];
+		$agendamentos['last_user'] = $user['id'];
+		$agendamentos['visivel'] = '';
+		$agendamentos['local_id'] = '';
+
+		$this->mysql->insert('eventos', $agendamentos);
+				
 		$novasDatas = json_decode($post['agendamentos']['datas'], true);
 
-		foreach ($novasDatas as $key => $value) {
-			$post['agendamentos']['create_date'] = date("Y-m-d H:i:s");
-			$post['agendamentos']['update_date'] = date("Y-m-d H:i:s");
+		if (!empty($novasDatas)) {
+			foreach ($novasDatas as $key => $value) {
+				$post['agendamentos']['create_date'] = date("Y-m-d H:i:s");
+				$post['agendamentos']['update_date'] = date("Y-m-d H:i:s");
 
-			$post['agendamentos']['horaInicialCafe'] = $post['agendamentos']['horaInicialCafe'] != "" ? $post['agendamentos']['horaInicialCafe'] : '00:00:00';
-			$post['agendamentos']['horaFinalCafe'] = $post['agendamentos']['horaFinalCafe'] != "" ? $post['agendamentos']['horaFinalCafe'] : '00:00:00';
+				$post['agendamentos']['horaInicialCafe'] = $post['agendamentos']['horaInicialCafe'] != "" ? $post['agendamentos']['horaInicialCafe'] : '00:00:00';
+				$post['agendamentos']['horaFinalCafe'] = $post['agendamentos']['horaFinalCafe'] != "" ? $post['agendamentos']['horaFinalCafe'] : '00:00:00';
 
-			$agendamentos = $post['agendamentos'];
+				$agendamentos = $post['agendamentos'];
 
-			unset($agendamentos['evento_id']);
-			unset($agendamentos['datas']);
+				unset($agendamentos['evento_id']);
+				unset($agendamentos['datas']);
 
-			$arrData1 = explode('/', $value['date']);
-			$agendamentos['dataInicial'] = "$arrData1[2]-$arrData1[1]-$arrData1[0]";
-			$arrData2 = explode('/', $value['date']);
-			$agendamentos['dataFinal'] = "$arrData2[2]-$arrData2[1]-$arrData2[0]";
-			$agendamentos['horaInicial'] = date('H:i', strtotime($value['startTime']));
-			$agendamentos['horaFinal'] = date('H:i', strtotime($value['endTime']));
+				$arrData1 = explode('/', $value['date']);
+				$agendamentos['dataInicial'] = "$arrData1[2]-$arrData1[1]-$arrData1[0]";
+				$arrData2 = explode('/', $value['date']);
+				$agendamentos['dataFinal'] = "$arrData2[2]-$arrData2[1]-$arrData2[0]";
+				$agendamentos['horaInicial'] = date('H:i', strtotime($value['startTime']));
+				$agendamentos['horaFinal'] = date('H:i', strtotime($value['endTime']));
 
-			$agendamentos['create_user'] = $user['id'];
-			$agendamentos['last_user'] = $user['id'];
-			$agendamentos['visivel'] = '';
-			$agendamentos['local_id'] = '';
-
-			$this->mysql->insert('eventos', $agendamentos);
-
-			$this->mailer->setFrom('alerta.butantan@butantan.gov.br', 'Agendamentos Biblioteca');
-			$this->mailer->addAddress('biblioteca.atendimento@butantan.gov.br');
-			//$this->mailer->addAddress('vitor.farias@fundacaobutantan.org.br');
-			$this->mailer->CharSet = 'UTF-8';
-			$this->mailer->Encoding = 'base64';
-			$this->mailer->Subject = 'Solicitação de Agendamento';
-
-			$this->mailer->Body = $this->mail_template->getTemplateByName(
-				'new.php',
-				[
-					'agendamentos' => $agendamentos,
-					'locais' => $post['locais']
-				]
-			);
-
-			if (!$this->mailer->send()) {
-				var_dump($this->mailer->ErrorInfo);
+				$agendamentos['create_user'] = $user['id'];
+				$agendamentos['last_user'] = $user['id'];
+				$agendamentos['visivel'] = '';
+				$agendamentos['local_id'] = '';
 			}
+		}
+
+		$this->mysql->insert('eventos', $agendamentos);
+
+		$this->mailer->setFrom('alerta.butantan@butantan.gov.br', 'Agendamentos Biblioteca');
+		$this->mailer->addAddress('biblioteca.atendimento@butantan.gov.br');
+		//$this->mailer->addAddress('vitor.farias@fundacaobutantan.org.br');
+		$this->mailer->CharSet = 'UTF-8';
+		$this->mailer->Encoding = 'base64';
+		$this->mailer->Subject = 'Solicitação de Agendamento';
+
+		$this->mailer->Body = $this->mail_template->getTemplateByName(
+			'new.php',
+			[
+				'agendamentos' => $agendamentos,
+				'locais' => $post['locais']
+			]
+		);
+
+		if (!$this->mailer->send()) {
+			var_dump($this->mailer->ErrorInfo);
 		}
 
 		return $Response->withRedirect('/agendamentos/historico?msg=Agendamento realizado com sucesso!', 301);

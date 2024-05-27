@@ -152,7 +152,6 @@
 
           $descriptionStart = date("d/m/Y", strtotime($value['data_evento'])) . ' das ' . $value['horaInicial'];
           $descriptionEnd =  $data_final . ' ate ' . $value['horaFinal'];
-
           $tituloInicio =  '<br /><b>Início:</b> ';
           $tituloTermino =  '<br /><b>Término:</b> ';
 
@@ -173,12 +172,14 @@
 
           $solicitante = '<br /><b>Solicitante:</b> ' . utf8_decode($value['solicitante']);
           $ramal = '<br /><b>Ramal:</b> ' . utf8_decode($value['ramal']);
+          $horarioCafe = '<br /><b>Horário Café:</b> ' . utf8_decode($value['horaInicialCafe']) . ' até ' . utf8_decode($value['horaFinalCafe']);
+          $horarioCafe = utf8_decode($horarioCafe);
 
           $description =
             '<b>ID:</b>' . $id . '\n <br>' .
             '<b>Evento:</b> ' . $title
             . $solicitante . $ramal . '<br>' . $nomeLocal .  $tituloInicio . $descriptionStart .
-            '\n' . $tituloTermino .  $descriptionEnd .  $people .  '' . $tituloObservacoes . utf8_decode($value['observacoes']);
+            '\n' . $tituloTermino .  $descriptionEnd . $horarioCafe . $people .  '' . $tituloObservacoes . utf8_decode($value['observacoes']);
           $description = utf8_encode($description);
           $description = str_replace("'", 0, $description);
 

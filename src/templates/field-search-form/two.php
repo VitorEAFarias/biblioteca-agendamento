@@ -3,6 +3,18 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <style>
+	.remove-date {
+		background-color: red;
+		color: white;
+		border: none;
+		padding: 5px 10px;
+		cursor: pointer;
+	}
+
+	.remove-date:hover {
+		background-color: darkred;
+	}
+
 	#detalhes_pcd,
 	#texto_pcd {
 		display: none;
@@ -61,24 +73,6 @@
 							<?php endif; ?>
 						</select>
 					</div>
-
-
-
-					<!-- <div class="col-xl-4">
-						<label class="ls-label">
-							<p><b class="ls-label-text">Solicitante</b></p>
-							<div class="ls-custom-select">
-								<select class="ls-custom" name="agendamentos[solicitante]" id="solicitante">
-									<option value="" disabled selected hidden><?php echo $post['agendamentos']['solicitante'] ? $post['agendamentos']['solicitante'] : 'Digite o nome para filtrar' ?></option>
-									<?php foreach ($colaboradores as $colaborador) { ?>
-										<option value="<?= $colaborador['nome'] ?>" data-departamento="<?= $colaborador['centrocusto'] ?>">
-											<?= $colaborador['nome'] ?>
-										</option>
-									<?php } ?>
-								</select>
-							</div>
-						</label>
-					</div> -->
 					<div class="col-xl-4">
 						<label class="ls-label">
 							<p><b class="ls-label-text">Email Solicitante</b></p>
@@ -135,16 +129,14 @@
 				</div>
 				<div id="dates-container">
 					<div class="row mt-2" id="date-row">
-						<div class="col-xl-5" style="display: flex; align-items: flex-end; justify-content: space-between">
-							<div class="col-xl-5">
-								<label class="ls-label">
-									<p><b class="ls-label-text">Data Inicial</b></p>
-								</label>
-								<div class="ls-prefix-group" style="display: block">
-									<div style="display: flex">
-										<input type="text" id="data-inicial" name="agendamentos[dataInicial]" placeholder="dd/mm/aaaa" value="<?php echo date('d/m/Y', strtotime($post['agendamentos']['dataInicial'])) ?>" required style="width: 100%;">
-										<a id="calendar-icon" class="ls-label-text-prefix ls-ico-calendar" style="min-width: 40px;"></a>
-									</div>
+						<div class="col-md-4">
+							<label class="ls-label">
+								<p><b class="ls-label-text">Data Inicial</b></p>
+							</label>
+							<div class="ls-prefix-group" style="display: block">
+								<div style="display: flex">
+									<input type="text" id="data-inicial" name="agendamentos[dataInicial]" placeholder="dd/mm/aaaa" value="<?php echo date('d/m/Y', strtotime($post['agendamentos']['dataInicial'])) ?>" required style="width: 100%;">
+									<!-- <a id="calendar-icon" class="ls-label-text-prefix ls-ico-calendar" style="min-width: 40px;"></a> -->
 								</div>
 							</div>
 							<div class="col-xl-2 text-center">
@@ -152,7 +144,7 @@
 							</div>
 						</div>
 
-						<div class="col-xl-2">
+						<div class="col-md-4">
 							<label class="ls-label">
 								<p><b class="ls-label-text">Horário Inicial</b></p>
 							</label>
@@ -172,10 +164,7 @@
 							<span id="hora-inicio-error" style="color: red;"></span>
 						</div>
 
-						<div class="col-xl-1 text-center mt-5">
-							<span><b>Até</b></span>
-						</div>
-						<div class="col-xl-2">
+						<div class="col-md-4">
 							<label class="ls-label">
 								<p><b class="ls-label-text">Horário Final</b></p>
 							</label>
@@ -193,9 +182,9 @@
 							</select>
 							<span id="hora-fim-error" style="color: red;"></span>
 						</div>
-						<div class="col-xl-2 mt-4" style="display: flex; justify-content: start;">
-							<button type="button" class="ls-ico-cancel-circle ls-btn-primary remove-date mt-2" style="display: none;"> </button>
-						</div>
+						<!-- <div class="col-xl-2 mt-4" style="display: flex; justify-content: start;">
+							<button type="button" id="remove-date" class="ls-ico-cancel-circle ls-btn-primary remove-date mt-2" style="display: none;"> </button>
+						</div> -->
 					</div>
 				</div>
 				<div class="col-xl-2 mt-5" id="adicionar-data">
@@ -378,68 +367,23 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js" integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
 	$(document).ready(function() {
-		$("select").selectize({
+		$("#solicitante").selectize({
 			onChange: function(value) {
-				var selectedOption = this.options[value]; // Obtém o elemento option selecionado
-				//var departamentoSelecionado = selectedOption.dataset.departamento; // Obtém o valor do data attribute 'data-departamento'
+				var selectedOption = this.options[value];
 				var departamentoSelecionado = selectedOption.departamento;
 				carregarCampos(departamentoSelecionado);
 			}
 		});
+
+		$("#hora-inicio").selectize();
+		$("#hora-fim").selectize();
 	});
 
 	function carregarCampos(departamentoSelecionado) {
-		console.log(departamentoSelecionado)
-		// let selectSolicitante = document.getElementById('solicitante');
 		let inputDepartamento = document.getElementById('departamento');
-		// let selectedSolicitanteIndex = 0;
-		// let selectedOption = selectSolicitante.options[selectSolicitante.selectedIndex];
-		// let departamentoSelecionado = selectedOption.getAttribute('data-departamento');
-
 		inputDepartamento.value = departamentoSelecionado;
 		inputDepartamento.classList.add('ls-custom');
-
-		// selectedSolicitanteIndex = selectSolicitante.selectedIndex;
-
-		// if (selectSolicitante.selectedIndex === 0) {
-		// 	selectSolicitante.selectedIndex = selectedSolicitanteIndex;
-		// }
 	}
-
-	//const selectSolicitante = document.getElementById('solicitante');
-
-	// selectSolicitante.addEventListener('input', function() {
-	// 	const inputText = selectSolicitante.value.toLowerCase();
-	// 	const options = selectSolicitante.querySelectorAll('option');
-
-	// 	options.forEach(option => {
-	// 		if (option.value.toLowerCase().includes(inputText) || option.textContent.toLowerCase().includes(inputText)) {
-	// 			option.style.display = '';
-	// 		} else {
-	// 			option.style.display = 'none';
-	// 		}
-	// 	});
-	// });
-
-	// const inputDepartamento = document.getElementById('departamento');
-
-	// let selectedSolicitanteIndex = 0;
-
-	// selectSolicitante.addEventListener('change', function() {
-	// 	const selectedOption = selectSolicitante.options[selectSolicitante.selectedIndex];
-	// 	const departamentoSelecionado = selectedOption.getAttribute('data-departamento');
-
-	// 	inputDepartamento.value = departamentoSelecionado;
-	// 	inputDepartamento.classList.add('ls-custom');
-
-	// 	selectedSolicitanteIndex = selectSolicitante.selectedIndex;
-	// });
-
-	// selectSolicitante.addEventListener('click', function() {
-	// 	if (selectSolicitante.selectedIndex === 0) {
-	// 		selectSolicitante.selectedIndex = selectedSolicitanteIndex;
-	// 	}
-	// });
 
 	document.addEventListener('DOMContentLoaded', function() {
 		var radioSim = document.getElementById('radio-sim');
@@ -496,58 +440,117 @@
 		var addDateButton = document.getElementById('add-date');
 		var form = document.getElementById('form-agendamento');
 		var datesContainer = document.getElementById('dates-container');
-		var originalRow = document.getElementById('date-row');
+		var btnApagarRow = document.getElementById('remove-date');
 		var initialDateField = document.getElementById('data-inicial');
 
 		createFlatpickr(initialDateField);
 
+		var horasOptions = [
+			<?php
+			$horaMin = strtotime('08:00');
+			$horaMax = strtotime('17:30');
+			$horaInicial = isset($post['agendamentos']['horaInicial']) && !empty($post['agendamentos']['horaInicial']) ? $post['agendamentos']['horaInicial'] : '08:00';
+
+			$options = array();
+			for ($hora = $horaMin; $hora <= $horaMax; $hora += 900) {
+				$horaAtual = date('H:i', $hora);
+				$selected = $horaAtual == $horaInicial ? 'selected' : '';
+				$options[] = '{"value": "' . $horaAtual . '", "selected": "' . $selected . '"}';
+			}
+			echo implode(', ', $options);
+			?>
+		];
+
 		addDateButton.addEventListener('click', function() {
-			var newRow = originalRow.cloneNode(true);
-			newRow.querySelector('#data-inicial').value = '';
-			newRow.querySelector('#hora-inicio').value = '';
-			newRow.querySelector('#hora-fim').value = '';
+			var newRow = document.createElement('div');
+			newRow.className = 'date-row row mt-3';
 
-			datesContainer.appendChild(newRow);
-
-			var newDateField = newRow.querySelector('#data-inicial');
-			var newCalendarIcon = newRow.querySelector('.ls-ico-calendar');
-			var removeDateButton = newRow.querySelector('.remove-date');
+			var newDateFieldContainer = document.createElement('div');
+			newDateFieldContainer.className = 'col-md-4';
+			var newDateLabel = document.createElement('label');
+			newDateLabel.className = 'ls-label';
+			var newDateFieldText = document.createElement('p');
+			newDateFieldText.innerHTML = '<b class="ls-label-text">Data Inicial</b>';
+			var newDateField = document.createElement('input');
+			newDateField.type = 'text';
+			newDateField.className = 'data-inicial form-control';
+			newDateField.placeholder = 'Data Inicial';
+			newDateLabel.appendChild(newDateFieldText);
+			newDateLabel.appendChild(newDateField);
+			newDateFieldContainer.appendChild(newDateLabel);
+			newRow.appendChild(newDateFieldContainer);
 			createFlatpickr(newDateField);
 
-			if (newCalendarIcon) {
-				newCalendarIcon.addEventListener('click', function() {
-					if (newDateField && newDateField._flatpickr) {
-						newDateField._flatpickr.open();
-					} else {
-						createFlatpickr(newDateField);
-					}
-				});
-			}
-
-			if (removeDateButton) {
-				removeDateButton.style.display = 'block';
-				removeDateButton.addEventListener('click', function() {
-					newRow.remove();
-				});
-			}
-
-			newRow.addEventListener('click', function(event) {
-				if (event.target.classList.contains('remove-date')) {
-					newRow.remove();
-				}
+			var newStartTimeContainer = document.createElement('div');
+			newStartTimeContainer.className = 'col-md-4';
+			var newStartTimeLabel = document.createElement('label');
+			newStartTimeLabel.className = 'ls-label';
+			var newStartTimeText = document.createElement('p');
+			newStartTimeText.innerHTML = '<b class="ls-label-text">Hora Início</b>';
+			var newStartTimeSelect = document.createElement('select');
+			newStartTimeSelect.className = 'hora-inicio form-control';
+			horasOptions.forEach(function(option) {
+				var opt = document.createElement('option');
+				opt.value = option.value;
+				opt.selected = option.selected === 'selected';
+				opt.textContent = option.value;
+				newStartTimeSelect.appendChild(opt);
 			});
+			newStartTimeLabel.appendChild(newStartTimeText);
+			newStartTimeLabel.appendChild(newStartTimeSelect);
+			newStartTimeContainer.appendChild(newStartTimeLabel);
+			newRow.appendChild(newStartTimeContainer);
+
+			var newEndTimeContainer = document.createElement('div');
+			newEndTimeContainer.className = 'col-md-4';
+			var newEndTimeLabel = document.createElement('label');
+			newEndTimeLabel.className = 'ls-label';
+			var newEndTimeText = document.createElement('p');
+			newEndTimeText.innerHTML = '<b class="ls-label-text">Hora Fim</b>';
+			var newEndTimeSelect = document.createElement('select');
+			newEndTimeSelect.className = 'hora-fim form-control';
+			horasOptions.forEach(function(option) {
+				var opt = document.createElement('option');
+				opt.value = option.value;
+				opt.selected = option.selected === 'selected';
+				opt.textContent = option.value;
+				newEndTimeSelect.appendChild(opt);
+			});
+			newEndTimeLabel.appendChild(newEndTimeText);
+			newEndTimeLabel.appendChild(newEndTimeSelect);
+			newEndTimeContainer.appendChild(newEndTimeLabel);
+			newRow.appendChild(newEndTimeContainer);
+
+			var removeDateButtonContainer = document.createElement('div');
+			removeDateButtonContainer.className = 'col-md-3 text-left';
+			var removeDateButton = document.createElement('button');
+			removeDateButton.type = 'button';
+			removeDateButton.className = 'remove-date btn btn-danger';
+			removeDateButton.style.display = 'block';
+			removeDateButton.textContent = 'Remover';
+			removeDateButton.addEventListener('click', function() {
+				newRow.remove();
+			});
+			removeDateButtonContainer.appendChild(removeDateButton);
+			newRow.appendChild(removeDateButtonContainer);
+
+			createFlatpickr(newDateField);
+			$(newStartTimeSelect).selectize();
+			$(newEndTimeSelect).selectize();
+
+			datesContainer.appendChild(newRow);
 		});
 
 		form.addEventListener('submit', function(event) {
-			var dateRows = datesContainer.querySelectorAll('#data-inicial');
-			var startTimeRows = datesContainer.querySelectorAll('#hora-inicio');
-			var endTimeRows = datesContainer.querySelectorAll('#hora-fim');
+			event.preventDefault();
+
+			var dateRows = datesContainer.querySelectorAll('.date-row');
 			var selectedDates = [];
 
-			dateRows.forEach(function(row, index) {
-				var dateInput = row.value.trim();
-				var startTimeInput = startTimeRows[index].value.trim();
-				var endTimeInput = endTimeRows[index].value.trim();
+			dateRows.forEach(function(row) {
+				var dateInput = row.querySelector('.data-inicial').value.trim();
+				var startTimeInput = row.querySelector('.hora-inicio').value.trim();
+				var endTimeInput = row.querySelector('.hora-fim').value.trim();
 
 				if (dateInput !== '' && startTimeInput !== '' && endTimeInput !== '') {
 					var selectedDate = {
@@ -564,6 +567,8 @@
 			datesInput.name = 'agendamentos[datas]';
 			datesInput.value = JSON.stringify(selectedDates);
 			form.appendChild(datesInput);
+
+			form.submit();
 		});
 	});
 
@@ -573,7 +578,6 @@
 
 		horaInicioInput.addEventListener('input', function() {
 			var horaInicio = this.value;
-			console.log(horaInicio)
 			var isValid = (horaInicio >= '08:00' && horaInicio <= '17:00');
 			horaInicioError.textContent = isValid ? '' : 'A hora inicial deve estar entre 08:00 e 17:00.';
 		});
@@ -620,12 +624,12 @@
 			},
 		});
 
-		var calendarIcon = document.getElementById('calendar-icon');
-		if (calendarIcon) {
-			calendarIcon.addEventListener('click', function() {
-				field._flatpickr.open();
-			});
-		}
+		// var calendarIcon = document.getElementById('calendar-icon');
+		// if (calendarIcon) {
+		// 	calendarIcon.addEventListener('click', function() {
+		// 		field._flatpickr.open();
+		// 	});
+		// }
 
 		function getNextMonday() {
 			var currentDate = new Date();
