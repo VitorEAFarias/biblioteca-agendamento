@@ -383,6 +383,26 @@ $app->group('/field-search-form', function () {
 		}
 
 		if ($post['form']['op'] == 'generate') {
+			$results = $this->mysql->fetchAll(
+				'SELECT eventos.*, 
+									CASE
+											WHEN TRY_CAST(eventos.categoria AS int) IS NOT NULL THEN 
+													(SELECT nome FROM categorias WHERE id = CAST(eventos.categoria AS int))
+											ELSE eventos.categoria
+									END AS categoria_nome
+					FROM eventos
+					WHERE eventos.solicitante LIKE :solicitante
+					AND eventos.nomeEvento LIKE :nomeEvento
+					ORDER BY eventos.evento_id DESC',
+				[
+					':solicitante' => '%' . $post['form']['solicitante'] . '%',
+					':nomeEvento' => '%' . $post['form']['nomeEvento'] . '%'
+				]
+			);
+			foreach ($results as $index => $result) {
+				$results[$index]['agendamentos'] = $post['form']['selects']['solicitante'][$result['solicitante']]['name'];
+			}
+
 			$phpView = $this->renderer;
 
 			$phpView = $this->renderer->render($Response, 'csv/main.php', [
@@ -544,7 +564,7 @@ $app->group('/field-search-form', function () {
 		$agendamentos['local_id'] = '';
 
 		$this->mysql->insert('eventos', $agendamentos);
-				
+
 		$novasDatas = json_decode($post['agendamentos']['datas'], true);
 
 		if (!empty($novasDatas)) {
