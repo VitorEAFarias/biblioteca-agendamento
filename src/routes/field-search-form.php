@@ -591,10 +591,10 @@ $app->group('/field-search-form', function () {
 				$agendamentos['last_user'] = $user['id'];
 				$agendamentos['visivel'] = '';
 				$agendamentos['local_id'] = '';
+
+				$this->mysql->insert('eventos', $agendamentos);
 			}
 		}
-
-		$this->mysql->insert('eventos', $agendamentos);
 
 		$this->mailer->setFrom('alerta.butantan@butantan.gov.br', 'Agendamentos Biblioteca');
 		$this->mailer->addAddress('biblioteca.atendimento@butantan.gov.br');
